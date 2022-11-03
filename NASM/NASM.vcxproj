@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{09c7c302-9857-47d8-a2ee-b7a1fe97802c}</ProjectGuid>
+    <RootNamespace>NASM</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>FunctionParser</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Instructions\CompareInstruction.cpp" />
+    <ClCompile Include="Instructions\InverseCompareInstruction.cpp" />
+    <ClCompile Include="Instructions\FFInstruction.cpp" />
+    <ClCompile Include="Instructions\CallInstruction.cpp" />
+    <ClCompile Include="Instructions\ByteOperatorInstruction.cpp" />
+    <ClCompile Include="Instructions\IntOperatorInstruction.cpp" />
+    <ClCompile Include="Instructions\MoveConstantIntInstruction.cpp" />
+    <ClCompile Include="Instructions\InverseMoveInstruction.cpp" />
+    <ClCompile Include="Instructions\InverseMoveEAXInstruction.cpp" />
+    <ClCompile Include="Instructions\MixOperatorInstruction.cpp" />
+    <ClCompile Include="Instructions\F7Instruction.cpp" />
+    <ClCompile Include="Instructions\JumpIfNotEqualInstruction.cpp" />
+    <ClCompile Include="Instructions\JumpIfBelowInstruction.cpp" />
+    <ClCompile Include="Instructions\JumpByteInstruction.cpp" />
+    <ClCompile Include="Instructions\PopRegisterInstruction.cpp" />
+    <ClCompile Include="Instructions\PushIntInstruction.cpp" />
+    <ClCompile Include="Instructions\RegRegInstruction.cpp" />
+    <ClCompile Include="Instructions\ExtendedOpInstruction.cpp" />
+    <ClCompile Include="Instructions\Operands\Expression.cpp" />
+    <ClCompile Include="FunctionDescriptor.cpp" />
+    <ClCompile Include="FunctionReader.cpp" />
+    <ClCompile Include="Instructions\Instructions.cpp" />
+    <ClCompile Include="Instructions\Instruction.cpp" />
+    <ClCompile Include="Instructions\JumpInstruction.cpp" />
+    <ClCompile Include="Instructions\LoadEffectiveAddressInstruction.cpp" />
+    <ClCompile Include="Instructions\JumpIfEqualInstruction.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Instructions\PushRegisterInstruction.cpp" />
+    <ClCompile Include="Instructions\Operands\Register.cpp" />
+    <ClCompile Include="Instructions\MoveInstruction.cpp" />
+    <ClCompile Include="Instructions\PushByteInstruction.cpp" />
+    <ClCompile Include="Instructions\Prefixes\PrefixOpcode.cpp" />
+    <ClCompile Include="Instructions\MoveEAXInstruction.cpp" />
+    <ClCompile Include="Instructions\StoreStringInstruction.cpp" />
+    <ClCompile Include="Instructions\XorInstruction.cpp" />
+    <ClCompile Include="Instructions\Operands\ScaledIndexByte.cpp" />
+    <ClCompile Include="Instructions\MoveConstantIntExpInstruction.cpp" />
+    <ClCompile Include="Instructions\TwoByteInstructions.cpp" />
+    <ClCompile Include="Instructions\MoveZeroExtendInstruction.cpp" />
+    <ClCompile Include="Instructions\TestInstruction.cpp" />
+    <ClCompile Include="Instructions\NoOpInstruction.cpp" />
+    <ClCompile Include="Instructions\ReturnInstruction.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="asmTests\test.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Instructions\CompareInstruction.h" />
+    <ClInclude Include="Instructions\InverseCompareInstruction.h" />
+    <ClInclude Include="Instructions\FFInstruction.h" />
+    <ClInclude Include="Instructions\CallInstruction.h" />
+    <ClInclude Include="Instructions\ByteOperatorInstruction.h" />
+    <ClInclude Include="Instructions\IntOperatorInstruction.h" />
+    <ClInclude Include="Instructions\MoveConstantIntInstruction.h" />
+    <ClInclude Include="Instructions\InverseMoveInstruction.h" />
+    <ClInclude Include="Instructions\InverseMoveEAXInstruction.h" />
+    <ClInclude Include="Instructions\MixOperatorInstruction.h" />
+    <ClInclude Include="Instructions\F7Instruction.h" />
+    <ClInclude Include="Instructions\JumpIfNotEqualInstruction.h" />
+    <ClInclude Include="Instructions\JumpIfBelowInstruction.h" />
+    <ClInclude Include="Instructions\JumpByteInstruction.h" />
+    <ClInclude Include="Instructions\PopRegisterInstruction.h" />
+    <ClInclude Include="Instructions\PushIntInstruction.h" />
+    <ClInclude Include="Instructions\RegRegInstruction.h" />
+    <ClInclude Include="Instructions\ExtendedOpInstruction.h" />
+    <ClInclude Include="Instructions\Operands\Expression.h" />
+    <ClInclude Include="FunctionDescriptor.h" />
+    <ClInclude Include="FunctionReader.h" />
+    <ClInclude Include="Instructions\Instructions.h" />
+    <ClInclude Include="Instructions\Instruction.h" />
+    <ClInclude Include="Instructions\JumpInstruction.h" />
+    <ClInclude Include="Instructions\PushRegisterInstruction.h" />
+    <ClInclude Include="Instructions\Operands\Register.h" />
+    <ClInclude Include="Instructions\MoveInstruction.h" />
+    <ClInclude Include="Instructions\PushByteInstruction.h" />
+    <ClInclude Include="Instructions\Prefixes\PrefixOpcode.h" />
+    <ClInclude Include="Instructions\MoveEAXInstruction.h" />
+    <ClInclude Include="Instructions\LoadEffectiveAddressInstruction.h" />
+    <ClInclude Include="Instructions\StoreStringInstruction.h" />
+    <ClInclude Include="Instructions\XorInstruction.h" />
+    <ClInclude Include="Instructions\Operands\ScaledIndexByte.h" />
+    <ClInclude Include="Instructions\MoveConstantIntExpInstruction.h" />
+    <ClInclude Include="Instructions\TwoByteInstructions.h" />
+    <ClInclude Include="Instructions\MoveZeroExtendInstruction.h" />
+    <ClInclude Include="Instructions\TestInstruction.h" />
+    <ClInclude Include="Instructions\JumpIfEqualInstruction.h" />
+    <ClInclude Include="Instructions\NoOpInstruction.h" />
+    <ClInclude Include="Instructions\ReturnInstruction.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

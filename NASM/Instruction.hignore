@@ -1,0 +1,42 @@
+#pragma once
+
+#include <string>
+
+class Instruction
+{
+public:
+	class Operand {
+	private:
+		static const std::string registers[8][5];
+	public:
+		enum OperandType : unsigned char {
+			REG = 0b00,
+			BYTE_OFFSET = 0b01,
+			INT_OFFSET = 0b10,
+			EXT_REG = 0b11
+		};
+		OperandType operandType;
+		unsigned char opRegister;
+		int offset = 0;
+		unsigned char scaleFactor = 1;
+		Operand(unsigned char mod, unsigned char rm);
+		Operand(unsigned char reg);
+		Operand();
+		bool isValid();
+		bool useSIB();
+		std::string toString();
+	};
+	
+	Instruction(unsigned char*& ip);
+	std::string toString();
+private:
+	unsigned char opcode;
+	Operand op1;
+	Operand op2;
+	std::string name;
+
+	void readModRM(unsigned char*& ip);
+	void readSIB(unsigned char*& ip, Operand& operand);
+	void readOperandValues(unsigned char*& ip, Operand& operand);
+};
+

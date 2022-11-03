@@ -1,0 +1,107 @@
+//#include "Instruction.h"
+#include <sstream>
+#include <iostream>
+
+const std::string Instruction::Operand::registers[8][5] = {
+	{"al", "ax", "eax", "mm0", "xmm0"},
+	{"cl", "cx", "ecx", "mm1", "xmm1"},
+	{"dl", "dx", "edx", "mm2", "xmm2"},
+	{"bl", "bx", "ebx", "mm3", "xmm3"},
+	{"al", "sp", "esp", "mm4", "xmm4"},
+	{"cl", "bp", "ebp", "mm5", "xmm5"},
+	{"dl", "si", "esi", "mm6", "xmm6"},
+	{"bl", "di", "edi", "mm7", "xmm7"}
+};
+
+void Instruction::readModRM(unsigned char*& ip) {
+	op1 = Operand((*ip >> 3) & 0b111);
+	op2 = Operand((*ip >> 6) & 0b11, *ip & 0b111);
+	ip++;
+	if (op2.useSIB()) {
+		readSIB(ip, op2);
+	}
+	readOperandValues(ip, op2);
+}
+
+void Instruction::readSIB(unsigned char*& ip, Operand& operand) {
+	operand.scaleFactor = 1 << ((*ip >> 6) & 0b11);
+	operand.opRegister = (*ip >> 3) & 0b111;
+	ip++;
+}
+
+void Instruction::readOperandValues(unsigned char*& ip, Operand& operand) {
+	if (operand.operandType == Operand::BYTE_OFFSET) {
+		operand.offset = (int)*(char*)ip;
+		ip++;
+	} else if (operand.operandType == Operand::INT_OFFSET) {
+		operand.offset = *(int*)ip;
+		ip += 4;
+	}
+}
+
+std::string Instruction::toString()
+{
+	return name + " " + op1.toString() + ", " + op2.toString();
+}
+
+Instruction::Instruction(unsigned char*& ip) {
+	opcode = *ip;
+	ip++;
+	switch(opcode) {
+	case 0x50: case 0x51: case 0x52: case 0x53: case 0x54: case 0x55: case 0x56: case 0x57:
+		name = "push";
+		op1 = Operand(opcode & 0b111);
+		break;
+	case 0x68:
+		name = "push dword";
+		ip += 4;
+		break;
+	case 0x6a:
+		name = "push byte";
+		ip++;
+		break;
+	case 0x8b:
+		name = "mov";
+		readModRM(ip);
+		break;
+	case 0xe9: {
+		name = "jmp";
+		int jumpTarget = *(int*)ip;
+		ip += 4;
+		ip += jumpTarget;
+		break; }
+	default:
+		std::cerr << std::hex << "Opcode " << (int)opcode << " not implemented at 0x" << (unsigned long)(ip - 1) << std::endl;
+		throw std::runtime_error("File can't be read, unimplemented opcode.");
+		break;
+	}
+	if (false) readModRM(ip);
+}
+
+Instruction::Operand::Operand(unsigned char mod, unsigned char rm) : operandType((OperandType)(mod & 0b11)), opRegister(rm & 0b111) {}
+
+Instruction::Operand::Operand(unsigned char reg) : operandType(EXT_REG), opRegister(reg & 0b111) {}
+
+Instruction::Operand::Operand() : operandType(REG), opRegister(0xff) {}
+
+bool Instruction::Operand::isValid() {
+	return opRegister <= 0b111;
+}
+
+bool Instruction::Operand::useSIB() {
+	return operandType != EXT_REG && opRegister == 0b100;
+}
+
+std::string Instruction::Operand::toString() {
+	if (!isValid()) return "null";
+	std::ostringstream reg;
+	if (scaleFactor > 1) {
+		reg << "[" << registers[opRegister][2] << "*" << scaleFactor << "]";
+	} else {
+		reg << registers[opRegister][2];
+	}
+	if (offset != 0) {
+		reg << " + " << std::hex << offset;
+	}
+	return reg.str();
+}
