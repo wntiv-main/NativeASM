@@ -26,17 +26,20 @@ void assert(bool condition, std::string message) {
 	if (!condition) throw new std::runtime_error(message);
 }
 
-void mixin(char* target, void(&mixin)()) {
-	char* mixinFunc = (char*)mixin;
-	while(*(short*)target != 0xc3cc) {
-		target++;
+void mixin(unsigned char* target, void(&mixin)()) {
+	unsigned char* mixinFunc = (unsigned char*)mixin;
+	//unsigned char* actualMixin = mixinFunc + 1 + 4 + *(int*)(mixinFunc + 1);
+	unsigned char* actualTarget = target + 1 + 4 + *(int*)(target + 1);
+	while(*actualTarget != 0xc3 || *(unsigned int*)(actualTarget + 1) != 0xcccccccc) {
+		//std::cout << (size_t)actualTarget << " " << (int)*(unsigned char*)actualTarget << std::endl;
+		actualTarget++;
 	}
-	while(*(short*)target != 0xc3cc) {
-		*target = *mixinFunc;
-		mixinFunc++;
-		target++;
-	}
-	*target = 0xc3;
+	*actualTarget = 0xe8;
+	actualTarget++;
+	int offset = mixinFunc - actualTarget - 4;
+	*(int*)actualTarget = offset;
+	actualTarget += 4;
+	*actualTarget = 0xc3;
 }
 
 void other() {
@@ -44,31 +47,37 @@ void other() {
 }
 
 void print4e110() {
-	std::cout << std::hex << 0x4e110 << std::endl;
+	std::cout << std::dec << "Your final grade is: " << 0 << "%" << std::endl;
 }
 
 int main() {
-	FunctionReader reader;
-
 	// Call initial time
 	print4e110();
 	// Find and modify constant to 0x800db7e
 	char* addr = (char*)print4e110;
 	addr++;
 	char* actualPtr = addr + 4 + *(int*)addr;
-	actualPtr += (0x0029E421 - 0x0029E3F0) + 1;
-	*(int*)actualPtr = 0x800db7e;
+	while(*(unsigned short*)actualPtr != 0x006a){ actualPtr++; }
+	actualPtr++;
+	*actualPtr = 100;
 	// Call second time
 	print4e110();
-	// mixin
-	mixin((char*)&print4e110, other);
-	reader.read(print4e110);
-	// Call final time
-	print4e110();
+	//mixin()
+	FunctionReader::read<int, int>(std::abs, "std::abs");
+	std::abs(-3);
+	//// mixin
+	//mixin((unsigned char*)&print4e110, other);
+	//// Call final time
+	//print4e110();
+	//mixin((unsigned char*)&other, Example::function3);
+	//print4e110();
+	//mixin((unsigned char*)&print4e110, Example::function2);
+	//print4e110();
 }
 
 
 	//auto p = getCodeSectionStart(Example::function1);
+	//FunctionReader reader;
 
 	//std::cout << std::hex << "\n -------- CODE START --------- at " << (unsigned long)p << std::endl;
 

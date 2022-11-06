@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FunctionParser", "NASM\NASM
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PEParser", "PEParser\PEParser.vcxproj", "{51FF2F8B-BE62-4C29-A02E-08C6226C6491}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mixin", "Mixin\Mixin.vcxproj", "{B6995A35-6F6B-4B49-830C-554BDDE7014B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{09C7C302-9857-47D8-A2EE-B7A1FE97802C} = {09C7C302-9857-47D8-A2EE-B7A1FE97802C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +36,14 @@ Global
 		{51FF2F8B-BE62-4C29-A02E-08C6226C6491}.Release|x64.Build.0 = Release|x64
 		{51FF2F8B-BE62-4C29-A02E-08C6226C6491}.Release|x86.ActiveCfg = Release|Win32
 		{51FF2F8B-BE62-4C29-A02E-08C6226C6491}.Release|x86.Build.0 = Release|Win32
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Debug|x64.ActiveCfg = Debug|x64
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Debug|x64.Build.0 = Debug|x64
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Debug|x86.ActiveCfg = Debug|Win32
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Debug|x86.Build.0 = Debug|Win32
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Release|x64.ActiveCfg = Release|x64
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Release|x64.Build.0 = Release|x64
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Release|x86.ActiveCfg = Release|Win32
+		{B6995A35-6F6B-4B49-830C-554BDDE7014B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

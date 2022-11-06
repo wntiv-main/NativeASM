@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{09c7c302-9857-47d8-a2ee-b7a1fe97802c}</ProjectGuid>
-    <RootNamespace>NASM</RootNamespace>
+    <ProjectGuid>{b6995a35-6f6b-4b49-830c-554bdde7014b}</ProjectGuid>
+    <RootNamespace>Mixin</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>FunctionParser</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -89,17 +89,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>C:\Users\Callu\source\repos\NASM\Debug\PEParser.exe "C:\Users\Callu\source\repos\NASM\Debug\FunctionParser.exe"</Command>
+      <Command>C:\Users\Callu\source\repos\NASM\Debug\PEParser.exe "C:\Users\Callu\source\repos\NASM\Debug\Mixin.exe"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>MarkWritable</Message>
+      <Message>Make writable</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,94 +146,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Instructions\CompareInstruction.cpp" />
-    <ClCompile Include="Instructions\InverseCompareInstruction.cpp" />
-    <ClCompile Include="Instructions\FFInstruction.cpp" />
-    <ClCompile Include="Instructions\CallInstruction.cpp" />
-    <ClCompile Include="Instructions\ByteOperatorInstruction.cpp" />
-    <ClCompile Include="Instructions\IntOperatorInstruction.cpp" />
-    <ClCompile Include="Instructions\MoveConstantIntInstruction.cpp" />
-    <ClCompile Include="Instructions\InverseMoveInstruction.cpp" />
-    <ClCompile Include="Instructions\InverseMoveEAXInstruction.cpp" />
-    <ClCompile Include="Instructions\MixOperatorInstruction.cpp" />
-    <ClCompile Include="Instructions\F7Instruction.cpp" />
-    <ClCompile Include="Instructions\JumpIfNotEqualInstruction.cpp" />
-    <ClCompile Include="Instructions\JumpIfBelowInstruction.cpp" />
-    <ClCompile Include="Instructions\JumpByteInstruction.cpp" />
-    <ClCompile Include="Instructions\PopRegisterInstruction.cpp" />
-    <ClCompile Include="Instructions\PushIntInstruction.cpp" />
-    <ClCompile Include="Instructions\RegRegInstruction.cpp" />
-    <ClCompile Include="Instructions\ExtendedOpInstruction.cpp" />
-    <ClCompile Include="Instructions\Operands\Expression.cpp" />
     <ClCompile Include="FunctionDescriptor.cpp" />
     <ClCompile Include="FunctionReader.cpp" />
-    <ClCompile Include="Instructions\Instructions.cpp" />
-    <ClCompile Include="Instructions\Instruction.cpp" />
-    <ClCompile Include="Instructions\JumpInstruction.cpp" />
-    <ClCompile Include="Instructions\LoadEffectiveAddressInstruction.cpp" />
-    <ClCompile Include="Instructions\JumpIfEqualInstruction.cpp" />
+    <ClCompile Include="Instruction.cpp" />
+    <ClCompile Include="InstructionPrefix.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Instructions\PushRegisterInstruction.cpp" />
-    <ClCompile Include="Instructions\Operands\Register.cpp" />
-    <ClCompile Include="Instructions\MoveInstruction.cpp" />
-    <ClCompile Include="Instructions\PushByteInstruction.cpp" />
-    <ClCompile Include="Instructions\Prefixes\PrefixOpcode.cpp" />
-    <ClCompile Include="Instructions\MoveEAXInstruction.cpp" />
-    <ClCompile Include="Instructions\StoreStringInstruction.cpp" />
-    <ClCompile Include="Instructions\XorInstruction.cpp" />
-    <ClCompile Include="Instructions\Operands\ScaledIndexByte.cpp" />
-    <ClCompile Include="Instructions\MoveConstantIntExpInstruction.cpp" />
-    <ClCompile Include="Instructions\TwoByteInstructions.cpp" />
-    <ClCompile Include="Instructions\MoveZeroExtendInstruction.cpp" />
-    <ClCompile Include="Instructions\TestInstruction.cpp" />
-    <ClCompile Include="Instructions\NoOpInstruction.cpp" />
-    <ClCompile Include="Instructions\ReturnInstruction.cpp" />
+    <ClCompile Include="Mixin.cpp" />
+    <ClCompile Include="Operand.cpp" />
+    <ClCompile Include="Register.cpp" />
+    <ClCompile Include="Target.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="asmTests\test.asm" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Instructions\CompareInstruction.h" />
-    <ClInclude Include="Instructions\InverseCompareInstruction.h" />
-    <ClInclude Include="Instructions\FFInstruction.h" />
-    <ClInclude Include="Instructions\CallInstruction.h" />
-    <ClInclude Include="Instructions\ByteOperatorInstruction.h" />
-    <ClInclude Include="Instructions\IntOperatorInstruction.h" />
-    <ClInclude Include="Instructions\MoveConstantIntInstruction.h" />
-    <ClInclude Include="Instructions\InverseMoveInstruction.h" />
-    <ClInclude Include="Instructions\InverseMoveEAXInstruction.h" />
-    <ClInclude Include="Instructions\MixOperatorInstruction.h" />
-    <ClInclude Include="Instructions\F7Instruction.h" />
-    <ClInclude Include="Instructions\JumpIfNotEqualInstruction.h" />
-    <ClInclude Include="Instructions\JumpIfBelowInstruction.h" />
-    <ClInclude Include="Instructions\JumpByteInstruction.h" />
-    <ClInclude Include="Instructions\PopRegisterInstruction.h" />
-    <ClInclude Include="Instructions\PushIntInstruction.h" />
-    <ClInclude Include="Instructions\RegRegInstruction.h" />
-    <ClInclude Include="Instructions\ExtendedOpInstruction.h" />
-    <ClInclude Include="Instructions\Operands\Expression.h" />
     <ClInclude Include="FunctionDescriptor.h" />
     <ClInclude Include="FunctionReader.h" />
-    <ClInclude Include="Instructions\Instructions.h" />
-    <ClInclude Include="Instructions\Instruction.h" />
-    <ClInclude Include="Instructions\JumpInstruction.h" />
-    <ClInclude Include="Instructions\PushRegisterInstruction.h" />
-    <ClInclude Include="Instructions\Operands\Register.h" />
-    <ClInclude Include="Instructions\MoveInstruction.h" />
-    <ClInclude Include="Instructions\PushByteInstruction.h" />
-    <ClInclude Include="Instructions\Prefixes\PrefixOpcode.h" />
-    <ClInclude Include="Instructions\MoveEAXInstruction.h" />
-    <ClInclude Include="Instructions\LoadEffectiveAddressInstruction.h" />
-    <ClInclude Include="Instructions\StoreStringInstruction.h" />
-    <ClInclude Include="Instructions\XorInstruction.h" />
-    <ClInclude Include="Instructions\Operands\ScaledIndexByte.h" />
-    <ClInclude Include="Instructions\MoveConstantIntExpInstruction.h" />
-    <ClInclude Include="Instructions\TwoByteInstructions.h" />
-    <ClInclude Include="Instructions\MoveZeroExtendInstruction.h" />
-    <ClInclude Include="Instructions\TestInstruction.h" />
-    <ClInclude Include="Instructions\JumpIfEqualInstruction.h" />
-    <ClInclude Include="Instructions\NoOpInstruction.h" />
-    <ClInclude Include="Instructions\ReturnInstruction.h" />
+    <ClInclude Include="Instruction.h" />
+    <ClInclude Include="InstructionPrefix.h" />
+    <ClInclude Include="Mixin.h" />
+    <ClInclude Include="Operand.h" />
+    <ClInclude Include="Register.h" />
+    <ClInclude Include="Target.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
