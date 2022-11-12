@@ -3,17 +3,17 @@
 #include <stdexcept>
 
 
-Operand::Operand(size_t length, int immediate, Register base, Register index, unsigned char scale)
-	: length(length), immediate(immediate), base(base), index(index), scale(scale) {}
+Operand::Operand(size_t length, int immediate, Register base, Register index, unsigned char scale, unsigned char* sourceAddr)
+	: length(length), immediate(immediate), base(base), index(index), scale(scale), sourceAddr(sourceAddr) {}
 
 Operand::Operand()
-	: length(0) {}
+	: length(0), sourceAddr(nullptr) {}
 
 Operand::Operand(int immediate, size_t length)
-	: length(length), immediate(immediate) {}
+	: length(length), immediate(immediate), sourceAddr(nullptr) {}
 
 Operand::Operand(Register reg, size_t length)
-	: length(length), base(reg) {}
+	: length(length), base(reg), sourceAddr(nullptr) {}
 
 bool Operand::isValid() {
 	return length != 0;
@@ -23,13 +23,17 @@ int Operand::getImmediate() {
 	return immediate;
 }
 
+unsigned char* Operand::getSourceAddr() {
+	return sourceAddr;
+}
+
 unsigned char* Operand::Builder::nullPtr = nullptr;
 
 Operand::Builder::Builder(unsigned char*& ip)
-	: ip(ip), length(0) {}
+	: ip(ip), length(0), sourceAddr(ip) {}
 
 Operand::Builder::Builder(unsigned char*& ip, size_t length)
-	: ip(ip), length(length) {}
+	: ip(ip), length(length), sourceAddr(ip) {}
 
 Operand::Builder& Operand::Builder::readImmediate(int bytes) {
 	if(bytes == 0) return *this;
@@ -105,7 +109,7 @@ void Operand::Builder::readSIB(int bytes, unsigned char mod) {
 }
 
 Operand Operand::Builder::build() {
-	return Operand(length, immediate, base, index, scale);
+	return Operand(length, immediate, base, index, scale, sourceAddr);
 }
 
 void Operand::Builder::doubleReg(unsigned char*& ip, int sz1, int sz2, Operand* op1, Operand* op2) {

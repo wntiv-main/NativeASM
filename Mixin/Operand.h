@@ -9,13 +9,15 @@ private:
 	Register base = {};
 	Register index = {};
 	unsigned char scale = 1;
-	Operand(size_t length, int immediate, Register base, Register index, unsigned char scale);
+	unsigned char* sourceAddr;
+	Operand(size_t length, int immediate, Register base, Register index, unsigned char scale, unsigned char* sourceAddr);
 public:
 	Operand();
 	Operand(int immediate, size_t length);
 	Operand(Register reg, size_t length);
 	bool isValid();
 	int getImmediate();
+	unsigned char* getSourceAddr();
 
 	class Builder {
 	private:
@@ -26,6 +28,7 @@ public:
 		Register index;
 		unsigned char scale = 1;
 		unsigned char*& ip;
+		unsigned char* sourceAddr;
 		void readSIB(int immediateBytes, unsigned char mod);
 	public:
 		Builder(unsigned char*& ip);

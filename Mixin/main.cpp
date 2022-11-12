@@ -1,24 +1,45 @@
 #include <iostream>
 
 #include "Target.h"
+#include "Mixin.h"
 #include "FunctionReader.h"
 
+
 void test() {
-	std::cout << std::hex << 0x4e110 << std::endl;
+	std::cout << "Returning from branchExplorer!" << std::endl;
+}
+
+void entering() {
+	std::cout << "Entering test2!" << std::endl;
+}
+
+void returning() {
+	std::cout << "Returning from test2!\n\n" << std::endl;
+}
+
+int test2(bool x) {
+	if(x) {
+		std::cout << "Hello!" << std::endl;
+		return 3;
+	}
+	if(!x) {
+		std::cout << "Goodbye?" << std::endl;
+		return 4;
+	}
+	std::cout << "OOF" << std::endl;
+	return 0;
 }
 
 int main() {
-	FunctionReader::read2(test, "test");
-	//test();
-	//Target atTest = Target::Builder().at((void*)test).build();
-	//atTest.jump();
-	//atTest.seekTo(0x4e110);
-	//atTest.write(2, 0x0800);
-	//atTest.write(2, 0xdb7e);
-	//atTest.write(1, 0x98);
-	//atTest.write(4, 0x0800db7e);
-	//atTest.write(1, 0xc3);
-	//atTest.write(4, 0xcccccccc);
-	//test();
-	//test(Target::Builder().at(Target::Type::HEAD).ordinal(0).build());
+	//std::vector<Target> targets = Target::Return(Target::branchExplorer).build();
+	//Mixin::inject(test, targets);
+
+	//test2(true);
+	//test2(false);
+
+	Mixin::inject(entering, std::vector<Target>({ Target::Head(test2).build() }));
+	Mixin::inject(returning, Target::Return(test2).build());
+
+	test2(true);
+	test2(false);
 }

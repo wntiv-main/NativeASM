@@ -23,6 +23,12 @@ bool Instruction::hasPrefix(unsigned char prefix) {
 Instruction::Instruction()
 	: opcode(0xcc) {}
 
+Instruction::Instruction(unsigned char*& ip) {
+	sourceAddr = ip;
+	parseInstruction(ip);
+	byteLength = ip - sourceAddr;
+}
+
 void Instruction::handleArithmatic(unsigned char*& ip) {
 	unsigned char relativeOpcode = opcode & 0x07;
 	if(relativeOpcode == 0x00) {
@@ -52,7 +58,7 @@ void Instruction::handleArithmatic(unsigned char*& ip) {
 	}
 }
 
-Instruction::Instruction(unsigned char*& ip) {
+void Instruction::parseInstruction(unsigned char*& ip) {
 	InstructionPrefix prefix;
 	do {
 		prefix = InstructionPrefix::getPrefix(*ip, parser64BitMode);
@@ -63,7 +69,7 @@ Instruction::Instruction(unsigned char*& ip) {
 	} while(prefix.isValid());
 	opcode = *ip;
 	ip++;
-	if(range(0x00, opcode, 8)) {
+	if(range(0x00, opcode, 6)) {
 		name = "add";
 		handleArithmatic(ip);
 		return;
@@ -78,7 +84,7 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[0] = Operand(Register(Register::ES), 4);
 		return;
 	}
-	if(range(0x08, opcode, 8)) {
+	if(range(0x08, opcode, 6)) {
 		name = "or";
 		handleArithmatic(ip);
 		return;
@@ -89,10 +95,22 @@ Instruction::Instruction(unsigned char*& ip) {
 		return;
 	}
 	if(opcode == 0x0f) {
+		secondOpcode = *ip;
+		ip++;
+		if(secondOpcode == 0xb6) {
+			name = "movzx";
+			Operand::Builder::doubleReg(ip, 1, 1, operands, operands + 1);
+			return;
+		}
+		if(range(0x80, secondOpcode, 0x10)) {
+			name = conditionalNames[secondOpcode - 0x80];
+			Operand::Builder(ip).readImmediate(4).build();
+			return;
+		}
 		throw "TWO BYTES GO AWAY";
 		return;
 	}
-	if(range(0x10, opcode, 8)) {
+	if(range(0x10, opcode, 6)) {
 		name = "adc";
 		handleArithmatic(ip);
 		return;
@@ -107,22 +125,22 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[0] = Operand(Register(Register::SS), 4);
 		return;
 	}
-	if(range(0x18, opcode, 8)) {
+	if(range(0x18, opcode, 6)) {
 		name = "sbb";
 		handleArithmatic(ip);
 		return;
 	}
-	if(opcode == 0x06) {
+	if(opcode == 0x1e) {
 		name = "push";
 		operands[0] = Operand(Register(Register::DS), 4);
 		return;
 	}
-	if(opcode == 0x07) {
+	if(opcode == 0x1f) {
 		name = "pop";
 		operands[0] = Operand(Register(Register::DS), 4);
 		return;
 	}
-	if(range(0x20, opcode, 8)) {
+	if(range(0x20, opcode, 6)) {
 		name = "and";
 		handleArithmatic(ip);
 		return;
@@ -132,7 +150,7 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[0] = Operand(Register(0b000 /* AL */), 1);
 		return;
 	}
-	if(range(0x28, opcode, 8)) {
+	if(range(0x28, opcode, 6)) {
 		name = "sub";
 		handleArithmatic(ip);
 		return;
@@ -142,7 +160,7 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[0] = Operand(Register(0b000 /* AL */), 1);
 		return;
 	}
-	if(range(0x30, opcode, 8)) {
+	if(range(0x30, opcode, 6)) {
 		name = "xor";
 		handleArithmatic(ip);
 		return;
@@ -153,7 +171,7 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[1] = Operand(Register(0b100 /* AH */), 1);
 		return;
 	}
-	if(range(0x38, opcode, 8)) {
+	if(range(0x38, opcode, 6)) {
 		name = "cmp";
 		handleArithmatic(ip);
 		return;
@@ -500,13 +518,13 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[1] = Operand::Builder(ip).readImmediate(4).build();
 		return;
 	}
-	if(range(0xc0, opcode, 8)) {
+	if(opcode == 0xc0) {
 		extOpcode = (*ip >> 3) & 0b111;
 		name = shiftNames[extOpcode];
 		operands[0] = Operand::Builder(ip, 1).readModRM(true).build();
 		return;
 	}
-	if(range(0xc8, opcode, 8)) {
+	if(opcode == 0xc1) {
 		extOpcode = (*ip >> 3) & 0b111;
 		name = shiftNames[extOpcode];
 		operands[0] = Operand::Builder(ip, 4).readModRM(true).build();
@@ -646,7 +664,7 @@ Instruction::Instruction(unsigned char*& ip) {
 		operands[0] = Operand(Register(0b000 /* AL */), 1);
 		return;
 	}
-		//////////////////////////////   TODO   /////////////////////////////////
+	//////////////////////////////   TODO   /////////////////////////////////
 	if(opcode == 0xe0) {
 		name = "loopne";
 		operands[0] = Operand(Register(0b000 /* RAX */), 4);
@@ -846,10 +864,108 @@ Instruction::Instruction(unsigned char*& ip) {
 	throw std::runtime_error("Unimplemented Opcode");
 }
 
-	unsigned char Instruction::getOpcode() {
-		return opcode;
-	}
+unsigned char Instruction::getOpcode() {
+	return opcode;
+}
 
-	Operand* Instruction::getOperands() {
-		return operands;
-	}
+Operand* Instruction::getOperands() {
+	return operands;
+}
+
+bool Instruction::returns() {
+	return opcode == 0xc2
+		|| opcode == 0xc3
+		|| opcode == 0xca
+		|| opcode == 0xcb
+		|| opcode == 0xcf;
+}
+
+Instruction::JumpType::JumpType()
+	: jumps(false) {}
+
+Instruction::JumpType::JumpType(bool relative, bool conditional, bool functional)
+	: jumps(true), relative(relative), conditional(conditional), functional(functional) {}
+
+bool Instruction::JumpType::operator==(const JumpType other) {
+	if(!(jumps || other.jumps)) return true;
+	return jumps == other.jumps
+		&& relative == other.relative
+		&& conditional == other.conditional;
+}
+
+bool Instruction::JumpType::operator!=(const JumpType other) {
+	return !this->operator==(other);
+}
+
+const Instruction::JumpType Instruction::JumpType::RELATIVE = { true, true, false };
+const Instruction::JumpType Instruction::JumpType::ABSOLUTE = { false, true, false };
+const Instruction::JumpType Instruction::JumpType::UNCONDITIONAL_RELATIVE = { true, false, false };
+const Instruction::JumpType Instruction::JumpType::UNCONDITIONAL_ABSOLUTE = { false, false, false };
+const Instruction::JumpType Instruction::JumpType::FUNCTIONAL_RELATIVE = { true, false, true };
+const Instruction::JumpType Instruction::JumpType::FUNCTIONAL_ABSOLUTE = { false, false, true };
+const Instruction::JumpType Instruction::JumpType::NONE = {};
+
+Instruction::JumpType Instruction::jumps() {
+	if(range(0x70, opcode, 0x10)
+		|| (opcode == 0x0f && range(0x80, secondOpcode, 0x10))
+		|| opcode == 0xe1
+		|| opcode == 0xe3)
+		return JumpType::RELATIVE;
+	if(opcode == 0xe9
+		|| opcode == 0xeb)
+		//|| (opcode == 0xff && extOpcode == 4))
+		return JumpType::UNCONDITIONAL_RELATIVE;
+	if(opcode == 0xea)
+		//|| (opcode == 0xff && extOpcode == 5))
+		return JumpType::UNCONDITIONAL_ABSOLUTE;
+	if(opcode == 0xe8)
+		//|| (opcode == 0xff && extOpcode == 2))
+		return JumpType::FUNCTIONAL_RELATIVE;
+	if(opcode == 0x9a)
+		//|| (opcode == 0xff && extOpcode == 3))
+		return JumpType::FUNCTIONAL_ABSOLUTE;
+	return JumpType::NONE;
+}
+
+Operand Instruction::getJumpSource() {
+	if(jumps() == JumpType::NONE) throw std::runtime_error("Instruction does not jump");
+	if(opcode == 0xe1) return operands[1];
+	return operands[0];
+}
+
+int Instruction::jumpsTo() {
+	if(jumps() == JumpType::NONE) throw std::runtime_error("Instruction does not jump");
+	getJumpSource().getImmediate();
+}
+
+int Instruction::jumpOpSize() {
+	if(jumps() == JumpType::NONE) throw std::runtime_error("Instruction does not jump");
+	if(range(0x70, opcode, 0x10)
+		|| opcode == 0xe1
+		|| opcode == 0xe3
+		|| opcode == 0xe9
+		|| opcode == 0xeb)
+		return 1;
+	if((opcode == 0x0f && range(0x80, secondOpcode, 0x10))
+		|| opcode == 0x9a
+		|| opcode == 0xe8
+		|| opcode == 0xea
+		|| opcode == 0xff)
+		return 4;
+}
+
+unsigned char* Instruction::getJumpOpLocation() {
+	return getJumpSource().getSourceAddr();
+}
+
+std::string Instruction::getName() {
+	return name;
+}
+
+unsigned char* Instruction::getSourceLocation() {
+	return sourceAddr;
+}
+
+int Instruction::getSourceLength() {
+	return byteLength;
+}
